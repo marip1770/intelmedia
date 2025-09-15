@@ -9,7 +9,7 @@
 					<!-- menus -->
 					<ul class="navbar-nav mr-auto">
 						<li class="nav-item">
-							<a class="nav-link" href="./">Rumah</a>
+							<a class="nav-link" href="./">Home</a>
 						</li>
 						<?php 
 							$menu = $conn->query("SELECT cl.name as category, ml.category_id as category_id
