@@ -1,7 +1,10 @@
 <?php
 require_once('./config.php');
-if(isset($_GET['id'])){
-    $qry = $conn->query("SELECT * FROM `magazine_list` where id = '{$_GET['id']}'");
+
+// if(isset($_GET['id'])){
+    // $qry = $conn->query("SELECT * FROM `magazine_list` where id = '{$_GET['id']}'");
+if(isset($m_id)){
+    $qry = $conn->query("SELECT * FROM `magazine_list` where id = '{$m_id}'");
     if($qry->num_rows > 0){
         $res = $qry->fetch_array();
         foreach($res as $k => $v){

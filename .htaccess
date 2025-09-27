@@ -1,0 +1,20 @@
+RewriteEngine On
+#RewriteBase /intelmedia/
+
+# Abaikan file & folder asli
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Root URL langsung ke index.php
+RewriteRule ^$ index.php [L]
+
+# --- Friendly Search ---
+# Redirect /search?q=keyword -> /search/keyword
+RewriteCond %{QUERY_STRING} ^q=([^&]+)$ [NC]
+RewriteRule ^search$ search/%1? [R=301,L]
+
+# Rewrite /search/keyword -> router.php?search=keyword
+RewriteRule ^search/([^/]+)/?$ router.php?search=$1 [L,QSA]
+
+# Slug kategori/artikel diarahkan ke router.php
+RewriteRule ^([a-z0-9\-]+)/?$ router.php?slug=$1 [L,QSA]

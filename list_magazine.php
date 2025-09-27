@@ -1,6 +1,6 @@
 <?php 
 require_once('./config.php');
-
+$cat_id = isset($cat_id) ? intval($cat_id) : 0;
 ?>
 <!DOCTYPE html>
 <html lang="en-US">
@@ -76,14 +76,11 @@ require_once('./config.php');
     <section class="main-content">
 		<div class="container-xl">
         <?php 
-        if(isset($_GET['c'])){
-            $cat_id = $_GET['c'];
+        if ($cat_id > 0) {
 			$category = $conn->query("SELECT name FROM category_list WHERE id = $cat_id LIMIT 1");
-            while($cat = $category->fetch_assoc()):
-        ?>
-        <h1><?= $cat['name'] ?></h1>
-        <?php
-         endwhile;
+			$cat = $category->fetch_assoc();
+			echo "<h1>{$cat['name']}</h1>";
+        
         }
 		elseif(isset($_GET['search'])){
 		?>
@@ -95,17 +92,22 @@ require_once('./config.php');
                     <div class="list-group">
                     <div class="row">
 						<?php 
-						if(isset($_GET['c'])){
-							$magazines = $conn->query("SELECT ml.id as id, ml.title as title, ml.banner_path as banner_path, 
-							ml.date_created as date_created, ml.description as description, cl.name as category, 
-							us.firstname as firstname, us.lastname as lastname, us.avatar as avatar, cl.id as category_id
-							FROM `magazine_list` ml 
-							INNER JOIN `category_list` cl ON ml.category_id = cl.id 
-							INNER JOIN `users` us ON ml.user_id = us.id
-							WHERE ml.category_id = '{$_GET['c']}' and ml.status = 1
-                            ORDER BY unix_timestamp(ml.date_created) DESC");
-							while($row = $magazines->fetch_assoc()):
+						if ($cat_id > 0) {
+							$magazines = $conn->query("
+								SELECT ml.id, ml.title, ml.banner_path, ml.date_created, ml.description,
+									cl.name as category, cl.id as category_id,
+									us.firstname, us.lastname, us.avatar,
+									cl.slug as cl_slug, ml.slug as ml_slug
+								FROM magazine_list ml
+								INNER JOIN category_list cl ON ml.category_id = cl.id
+								INNER JOIN users us ON ml.user_id = us.id
+								WHERE ml.category_id = {$cat_id} AND ml.status = 1
+								ORDER BY ml.date_created DESC
+							");
+							
+							while ($row = $magazines->fetch_assoc()) {
 								$row['description'] = strip_tags(html_entity_decode($row['description']));
+							// }
 						?>
 							<div class="col-md-12 col-sm-6">
 								<!-- post -->
@@ -114,7 +116,7 @@ require_once('./config.php');
 										<span class="post-format-sm">
 											<i class="icon-picture"></i>
 										</span>
-										<a href="./view_magazine.php?id=<?= $row['id'] ?>">
+										<a href="./<?= $row['ml_slug'] ?>">
 											<div class="inner">
 												<img src="<?= validate_image($row['banner_path']) ?>" alt="post-title" />
 											</div>
@@ -123,20 +125,20 @@ require_once('./config.php');
 									<div class="details">
 										<ul class="meta list-inline mb-3">
 											<li class="list-inline-item"><img src="<?= validate_image(isset($row['avatar']) ? $row['avatar'] : "") ?>" class="rounded-image" alt="author"/><?= $row['firstname'] ?> <?= $row['lastname'] ?></a></li>
-											<li class="list-inline-item"><a href="./list_magazine.php?c=<?= $row['category_id'] ?>"><?= $row['category'] ?></a></li>
+											<li class="list-inline-item"><a href="./<?= $row['cl_slug'] ?>"><?= $row['category'] ?></a></li>
 											<li class="list-inline-item"><i class="fa fa-calendar-day"></i> <?= date('d M Y H:i',strtotime($row['date_created'])) ?></li>
 										</ul>
-										<h5 class="post-title"><a href="./view_magazine.php?id=<?= $row['id'] ?>"><?= $row['title'] ?></a></h5>
+										<h5 class="post-title"><a href="./<?= $row['ml_slug'] ?>"><?= $row['title'] ?></a></h5>
 										<p class="excerpt mb-0"><?= substr($row['description'],0,500) ?></p>
 										<div class="post-bottom clearfix d-flex align-items-center">
 											<div class="more-button float-end">
-												<a href="./view_magazine.php?id=<?= $row['id'] ?>"><span class="icon-options"></span></a>
+												<a href="./<?= $row['ml_slug'] ?>"><span class="icon-options"></span></a>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-						<?php endwhile; ?>
+						<?php } ?>
 						<?php if($magazines->num_rows < 1): ?>
 							<center><span class="text-muted">No News Listed Yet.</span></center>
 						<?php endif; 
@@ -157,7 +159,7 @@ require_once('./config.php');
 										<span class="post-format-sm">
 											<i class="icon-picture"></i>
 										</span>
-										<a href="./view_magazine.php?id=<?= $cari['id'] ?>">
+										<a href="./<?= $cari['slug'] ?>">
 											<div class="inner">
 												<img src="<?= validate_image($cari['banner_path']) ?>" alt="post-title" />
 											</div>
@@ -174,15 +176,15 @@ require_once('./config.php');
 										$cat1 = $conn->query("SELECT * FROM `category_list` where `id` = {$cari['category_id']} limit 1");
 										while($cat = $cat1->fetch_assoc()):
 										?>
-											<li class="list-inline-item"><a href="./list_magazine.php?c=<?= $cari['category_id'] ?>"><?= $cat['name'] ?></a></li>
+											<li class="list-inline-item"><a href="./<?= $cat['slug'] ?>"><?= $cat['name'] ?></a></li>
 										<?php endwhile;?>
 											<li class="list-inline-item"><i class="fa fa-calendar-day"></i> <?= date('d M Y H:i',strtotime($cari['date_created'])) ?></li>
 										</ul>
-										<h5 class="post-title"><a href="./view_magazine.php?id=<?= $cari['id'] ?>"><?= $cari['title'] ?></a></h5>
+										<h5 class="post-title"><a href="./<?= $cari['slug'] ?>"><?= $cari['title'] ?></a></h5>
 										<p class="excerpt mb-0"><?= substr($cari['description'],0,500) ?></p>
 										<div class="post-bottom clearfix d-flex align-items-center">
 											<div class="more-button float-end">
-												<a href="./view_magazine.php?id=<?= $cari['id'] ?>"><span class="icon-options"></span></a>
+												<a href="./<?= $cari['slug'] ?>"><span class="icon-options"></span></a>
 											</div>
 										</div>
 									</div>

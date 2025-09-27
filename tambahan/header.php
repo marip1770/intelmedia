@@ -12,14 +12,14 @@
 							<a class="nav-link" href="./">Home</a>
 						</li>
 						<?php 
-							$menu = $conn->query("SELECT cl.name as category, ml.category_id as category_id
+							$menu = $conn->query("SELECT cl.name as category, ml.category_id as category_id, cl.slug as cl_slug
 							FROM `magazine_list` ml INNER JOIN `category_list` cl ON ml.category_id = cl.id 
 							WHERE ml.status = 1 GROUP BY cl.name ORDER BY cl.name ASC");
 							if($menu->num_rows < 4): 
 								while($menu1 = $menu->fetch_assoc()):
 						?>
 							<li class="nav-item">
-								<a class="nav-link" href="./list_magazine.php?c=<?= $menu1['category_id'] ?>"><?= $menu1['category'] ?></a>
+								<a class="nav-link" href="./<?= $menu1['cl_slug'] ?>"><?= $menu1['category'] ?></a>
 							</li>
 						<?php 
 								endwhile;
@@ -29,18 +29,18 @@
 									if($a < 2):
 						?>
 							<li class="nav-item">
-								<a class="nav-link" href="./list_magazine.php?c=<?= $menu1['category_id'] ?>"><?= $menu1['category'] ?></a>
+								<a class="nav-link" href="./<?= $menu1['cl_slug'] ?>"><?= $menu1['category'] ?></a>
 							</li>
 						<?php
 									elseif ($a == 2):
 						?> 
 							<li class="nav-item dropdown">Lainnya
 								<ul class="dropdown-menu">
-									<li><a class="dropdown-item" href="./list_magazine.php?c=<?= $menu1['category_id'] ?>"><?= $menu1['category'] ?></a></li>
+									<li><a class="dropdown-item" href="./<?= $menu1['cl_slug'] ?>"><?= $menu1['category'] ?></a></li>
 						<?php
 									elseif ($a > 2):
 						?>
-									<li><a class="dropdown-item" href="./list_magazine.php?c=<?= $menu1['category_id'] ?>"><?= $menu1['category'] ?></a></li>
+									<li><a class="dropdown-item" href="./<?= $menu1['cl_slug'] ?>"><?= $menu1['category'] ?></a></li>
 						<?php 
 									endif;
 									$a = $a + 1;
