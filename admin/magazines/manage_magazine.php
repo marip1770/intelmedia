@@ -42,6 +42,12 @@ if(isset($_GET['id'])){
                         <?php endwhile; ?>
                     </select>
                 </div>
+                <!-- <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                        <input class="custom-control-input" type="checkbox" name="head" id="head" <?= isset($head) && $head == 1 ? "checked" : '' ?>>
+                        <label for="head" class="custom-control-label text-purple">Head News</label>
+                    </div>
+                </div> -->
                 <div class="form-group">
                     <label for="description" class="control-label text-purple">Description/Content</label>
                     <textarea rows="3" name="description" id="description" class="form-control form-control-border summernote" data-height = "40vh" data-placeholder="Write the magazine descrtion here." required><?php echo isset($description) ? $description : '' ?></textarea>

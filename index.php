@@ -83,7 +83,7 @@
 					<?php 
 						$berita = $conn->query("SELECT ml.id as id, ml.title as title, ml.banner_path as banner_path, 
 						ml.date_created as date_created, ml.description as description, cl.name as category, 
-						us.firstname as firstname, us.lastname as lastname, cl.id as category_id
+						us.firstname as firstname, us.lastname as lastname, cl.id as category_id,ml.slug as ml_slug,cl.slug as cl_slug
 						FROM `magazine_list` ml 
 						INNER JOIN `category_list` cl ON ml.category_id = cl.id 
 						INNER JOIN `users` us ON ml.user_id = us.id
@@ -95,14 +95,14 @@
 								<!-- featured post large -->
 								<div class="post featured-post-lg">
 									<div class="details clearfix">
-										<a href="./list_magazine.php?c=<?= $berita1['category_id'] ?>" class="category-badge"><?= $berita1['category'] ?></a>
-										<h2 class="post-title"><a href="./view_magazine.php?id=<?= $berita1['id'] ?>"><?= $berita1['title'] ?></a></h2>
+										<a href="./<?= $berita1['cl_slug'] ?>" class="category-badge"><?= $berita1['category'] ?></a>
+										<h2 class="post-title"><a href="./<?= $berita1['ml_slug'] ?>"><?= $berita1['title'] ?></a></h2>
 										<ul class="meta list-inline mb-0">
 											<li class="list-inline-item"><?= $berita1['firstname'] ?> <?= $berita1['lastname'] ?></a></li>
 											<li class="list-inline-item"><?= date('d M Y H:i',strtotime($berita1['date_created'])) ?></li>
 										</ul>
 									</div>
-									<a href="./view_magazine.php?id=<?= $berita1['id'] ?>">
+									<a href="./<?= $berita1['ml_slug'] ?>">
 										<div class="thumb rounded">
 											<div class="inner data-bg-image" data-bg-image="<?= validate_image($berita1['banner_path']) ?>"></div>
 										</div>
@@ -419,7 +419,7 @@
 						<?php 
 							$magazines = $conn->query("SELECT ml.id as id, ml.title as title, ml.banner_path as banner_path, 
 							ml.date_created as date_created, ml.description as description, cl.name as category, 
-							us.firstname as firstname, us.lastname as lastname, us.avatar as avatar, cl.id as category_id
+							us.firstname as firstname, us.lastname as lastname, us.avatar as avatar, cl.id as category_id,ml.slug as ml_slug,cl.slug as cl_slug
 							FROM `magazine_list` ml 
 							INNER JOIN `category_list` cl ON ml.category_id = cl.id 
 							INNER JOIN `users` us ON ml.user_id = us.id
@@ -435,7 +435,7 @@
 										<span class="post-format-sm">
 											<i class="icon-picture"></i>
 										</span>
-										<a href="./view_magazine.php?id=<?= $row['id'] ?>">
+										<a href="./<?= $row['ml_slug'] ?>">
 											<div class="inner">
 												<img src="<?= validate_image($row['banner_path']) ?>" alt="post-title" />
 											</div>
@@ -444,14 +444,14 @@
 									<div class="details">
 										<ul class="meta list-inline mb-3">
 											<li class="list-inline-item"><img src="<?= validate_image(isset($row['avatar']) ? $row['avatar'] : "") ?>" class="rounded-image" alt="author"/><?= $row['firstname'] ?> <?= $row['lastname'] ?></a></li>
-											<li class="list-inline-item"><a href="./list_magazine.php?c=<?= $row['category_id'] ?>"><?= $row['category'] ?></a></li>
+											<li class="list-inline-item"><a href="./<?= $row['cl_slug'] ?>"><?= $row['category'] ?></a></li>
 											<li class="list-inline-item"><i class="fa fa-calendar-day"></i> <?= date('d M Y H:i',strtotime($row['date_created'])) ?></li>
 										</ul>
-										<h5 class="post-title"><a href="./view_magazine.php?id=<?= $row['id'] ?>"><?= $row['title'] ?></a></h5>
+										<h5 class="post-title"><a href="./<?= $row['ml_slug'] ?>"><?= $row['title'] ?></a></h5>
 										<p class="excerpt mb-0"><?= substr($row['description'],0,500) ?></p>
 										<div class="post-bottom clearfix d-flex align-items-center">
 											<div class="more-button float-end">
-												<a href="./view_magazine.php?id=<?= $row['id'] ?>"><span class="icon-options"></span></a>
+												<a href="./<?= $row['ml_slug'] ?>"><span class="icon-options"></span></a>
 											</div>
 										</div>
 									</div>
@@ -556,12 +556,12 @@
 							<div class="widget-content">
 								<ul class="list">
 									<?php 
-										$categoy_list = $conn->query("SELECT COUNT(ml.id) as jml, cl.name as category, cl.id as category_id
+										$categoy_list = $conn->query("SELECT COUNT(ml.id) as jml, cl.name as category, cl.id as category_id,ml.slug as ml_slug,cl.slug as cl_slug
 										FROM `magazine_list` ml INNER JOIN `category_list` cl ON ml.category_id = cl.id 
 										WHERE ml.status = 1 GROUP BY cl.name");
 										while($baris = $categoy_list->fetch_assoc()):
 									?>
-									<li><a href="./list_magazine.php?c=<?= $baris['category_id'] ?>"><?= $baris['category'] ?></a><span>(<?= $baris['jml'] ?>)</span></li>
+									<li><a href="./<?= $baris['cl_slug'] ?>"><?= $baris['category'] ?></a><span>(<?= $baris['jml'] ?>)</span></li>
 									<?php endwhile; ?>
 									<?php if($categoy_list->num_rows < 1): ?>
 										<center><span class="text-muted">No News Listed Yet.</span></center>
