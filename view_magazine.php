@@ -108,6 +108,15 @@ if(isset($m_id)){
                 <div class="card card-outline card-primary">
                     <div class="card-body">
                         <div class="container-fluid">
+                            <a id="whatsapp-share" href="#" target="_blank">
+                            <button>Bagikan ke WhatsApp</button>
+                            </a>
+
+                            <!-- Tombol Salin Link -->
+                            <button onclick="copyLink()">Salin Link</button>
+
+                            <!-- Notifikasi salin -->
+                            <span id="copy-notification" style="display:none; color: green;">Link disalin!</span>
                             <div class="row justify-content-center align-items-end">
                                 <div class="col-md-4 text-center">
                                     <img src="<?= validate_image(isset($banner_path) ? $banner_path : "") ?>" alt="" id="magazine-cover-view" class="img-thumbnail bg-dark">
@@ -162,6 +171,7 @@ if(isset($m_id)){
 <script src="js/slick.min.js"></script>
 <script src="js/jquery.sticky-sidebar.min.js"></script>
 <script src="js/custom.js"></script>
+<script src="js/custom_new.js"></script>
 
 </body>
 </html>
