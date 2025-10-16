@@ -1,20 +1,31 @@
-const pageTitle = document.title;
-const pageUrl = window.location.href;
+document.addEventListener("DOMContentLoaded", function () {
+  const pageTitle = document.title;
+  const pageUrl = window.location.href;
+  const message = `${pageTitle}\n${pageUrl}`;
 
-// Hindari baris kosong di antara judul dan link
-const message = `${pageTitle}\n${pageUrl}`;
+  const whatsappBtn = document.getElementById("whatsapp-share");
+  const notif = document.getElementById("copy-notification");
 
-document.getElementById("whatsapp-share").href = `https://wa.me/?text=${encodeURIComponent(message)}`;
+  if (whatsappBtn) {
+    whatsappBtn.href = `https://wa.me/?text=${encodeURIComponent(message)}`;
+  }
 
-function copyLink() {
-  navigator.clipboard.writeText(message).then(function() {
-    const notif = document.getElementById("copy-notification");
-    notif.style.display = "inline";
+  window.copyLink = function () {
+    navigator.clipboard.writeText(message).then(
+      function () {
+        notif.style.display = "block";
+        setTimeout(() => (notif.style.opacity = "1"), 10);
 
-    setTimeout(() => {
-      notif.style.display = "none";
-    }, 2000);
-  }, function(err) {
-    alert("Gagal menyalin link: " + err);
-  });
-}
+        setTimeout(() => {
+          notif.style.opacity = "0";
+          setTimeout(() => {
+            notif.style.display = "none";
+          }, 500);
+        }, 2000);
+      },
+      function (err) {
+        alert("Gagal menyalin link: " + err);
+      }
+    );
+  };
+});
