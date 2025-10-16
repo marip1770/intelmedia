@@ -1,5 +1,6 @@
 RewriteEngine On
-#RewriteBase /intelmedia/
+#RewriteRule ^tes$ index.php [L]
+RewriteBase /intelmedia/
 
 # Abaikan file & folder asli
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -9,12 +10,12 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^$ index.php [L]
 
 # --- Friendly Search ---
-# Redirect /search?q=keyword -> /search/keyword
-RewriteCond %{QUERY_STRING} ^q=([^&]+)$ [NC]
-RewriteRule ^search$ search/%1? [R=301,L]
+# Jika ada request ke list_magazine.php?search=keyword -> redirect ke /search/keyword
+RewriteCond %{THE_REQUEST} \s/list_magazine\.php\?search=([^\s&]+) [NC]
+RewriteRule ^list_magazine\.php$ search/%1? [R=301,L]
 
-# Rewrite /search/keyword -> router.php?search=keyword
-RewriteRule ^search/([^/]+)/?$ router.php?search=$1 [L,QSA]
+# Tangani /search/keyword -> list_magazine.php?search=keyword
+RewriteRule ^search/([^/]+)/?$ list_magazine.php?search=$1 [L,QSA]
 
 # Slug kategori/artikel diarahkan ke router.php
 RewriteRule ^([a-z0-9\-]+)/?$ router.php?slug=$1 [L,QSA]

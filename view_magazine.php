@@ -108,12 +108,48 @@ if(isset($m_id)){
                 <div class="card card-outline card-primary">
                     <div class="card-body">
                         <div class="container-fluid">
+                            
                             <div class="row justify-content-center align-items-end">
                                 <div class="col-md-4 text-center">
                                     <img src="<?= validate_image(isset($banner_path) ? $banner_path : "") ?>" alt="" id="magazine-cover-view" class="img-thumbnail bg-dark">
                                 </div>
                                 <div class="col-md-8">
                                     <h2 class='text-purple'><b><?= isset($title) ? $title : "" ?></b></h2>
+                                    <!-- <br> -->
+                                    <a id="whatsapp-share" href="#" target="_blank" title="Bagikan ke WhatsApp">
+                                    <img src="images/whatsapp-svgrepo-com.svg" 
+                                        alt="WhatsApp" 
+                                        width="32" 
+                                        height="32" 
+                                        style="cursor: pointer;">
+                                    </a>
+
+                                    <!-- Tombol Salin Link -->
+                                    <button onclick="copyLink()" title="Salin Link" style="background:none;border:none;cursor:pointer;">
+                                    <img src="images/share-nodes-svgrepo-com.svg" 
+                                        alt="Bagikan" 
+                                        width="32" 
+                                        height="32">
+                                    </button>
+
+                                    <!-- Popup Notifikasi -->
+                                    <div id="copy-notification"
+                                        style="
+                                            position: fixed !important;
+                                            bottom: 20px;
+                                            right: 20px;
+                                            background: #4caf50;
+                                            color: white;
+                                            padding: 10px 15px;
+                                            border-radius: 8px;
+                                            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                                            z-index: 999999;
+                                            font-size: 14px;
+                                            opacity: 0;
+                                            transition: opacity 0.5s ease;
+                                        ">
+                                    Link disalin!
+                                    </div>
                                     <hr>
                                     <div class="row justify-content-between align-items-top">
                                         <div class="col-auto">
@@ -162,6 +198,7 @@ if(isset($m_id)){
 <script src="js/slick.min.js"></script>
 <script src="js/jquery.sticky-sidebar.min.js"></script>
 <script src="js/custom.js"></script>
+<script src="js/custom_new.js"></script>
 
 </body>
 </html>
