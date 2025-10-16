@@ -1,6 +1,6 @@
 RewriteEngine On
 #RewriteRule ^tes$ index.php [L]
-RewriteBase /intelmedia/
+#RewriteBase /intelmedia/
 
 # Abaikan file & folder asli
 RewriteCond %{REQUEST_FILENAME} !-f
